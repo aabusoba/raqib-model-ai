@@ -12,14 +12,36 @@ from recommender import get_recommendations, get_safety_adjusted_risk
 
 app = Flask(__name__)
 CORS(app)
-# Configure Swagger UI to look for assets relative to the base path
-app.config['SWAGGER'] = {
-    'title': 'Raqib Model 1 API',
-    'uiversion': 3,
-    'basePath': '/mod1/api'
-}
-swagger = Swagger(app)
 
+# Explicit Swagger config for Proxy environments
+app.config['SWAGGER'] = {
+    'title': 'Raqib AI - Model Design 1',
+    'uiversion': 3,
+    'specs_route': '/apidocs/',
+    'static_url_path': '/flasgger_static',
+    'specs': [
+        {
+            'endpoint': 'apispec_1',
+            'route': '/apispec_1.json',
+            'rule_filter': lambda rule: True,
+            'model_filter': lambda tag: True,
+        }
+    ],
+}
+
+# Template to force relative paths in Swagger UI
+template = {
+    "swagger": "2.0",
+    "info": {
+        "title": "Raqib AI Model 1 API",
+        "description": "API for classical traffic AI predictions",
+        "version": "1.0.0"
+    },
+    "basePath": "/mod1/api", # This must match Nginx rewrite
+    "schemes": ["http", "https"]
+}
+
+swagger = Swagger(app, template=template)
 
 def load_models():
     current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -37,9 +59,7 @@ def get_dashboard_stats():
     current_dir = os.path.dirname(os.path.abspath(__file__))
     stats_path = os.path.join(current_dir, 'v1_stats.json')
     if os.path.exists(stats_path):
-        with open(stats_path, 'r', encoding='utf-8') as f:
-            return json.load(f)
-    # Fallback only if absolutely necessary
+        with open(stats_path, 'r', encoding='utf-8') as f: return json.load(f)
     df = load_and_preprocess()
     return {
         "severity_distribution": get_severity_report(df).to_dict(),
@@ -50,10 +70,12 @@ def get_dashboard_stats():
 
 @app.route('/api/stats', methods=['GET'])
 def get_stats():
+    """Get dashboard stats (Model 1)"""
     return jsonify(sanitize_json(get_dashboard_stats()))
 
 @app.route('/api/predict', methods=['POST'])
 def predict():
+    """Predict risk and vehicle type (Model 1)"""
     req_data = request.get_json()
     model_data = load_models()
     if not model_data: return jsonify({"error": "Models not found"}), 500
@@ -64,19 +86,19 @@ def predict():
         'Light_Conditions': req_data.get('light', 'ضوء النهار'),
         'Weather_Conditions': req_data.get('weather', 'صافي - لا رياح'),
         'Road_Surface_Conditions': req_data.get('surface', 'جاف'),
-        'Junction_Control': req_data.get('junction', 'Give way or uncontrolled'),
-        'Road_Type': req_data.get('road_type', 'طريق فردي'),
-        'Urban_or_Rural_Area': req_data.get('area', 'حضري')
+        'Urban_or_Rural_Area': req_data.get('area', 'حضري'),
+        'Road_Type': 'طريق فردي',
+        'Junction_Control': 'Give way or uncontrolled'
     }
     pred_sev = predict_risk(m_s, l_s, input_data, f_cols)
     pred_veh = predict_risk(m_v, l_v, input_data, f_cols)
     adj_sev, overwritten = get_safety_adjusted_risk(pred_sev, input_data)
     
-    # Recommendations using cached impact if possible
     stats = get_dashboard_stats()
     analysis_res = {'increase_pct': stats.get('lighting_impact', 0), 'top_dangerous': stats.get('top_cities', [{'city': 'N/A'}])[0]['city']}
     preds_res = {'risk': pred_sev, 'time': f"{input_data['Hour']}:00"}
     recs = get_recommendations(analysis_res, preds_res, input_data)
+    
     return jsonify(sanitize_json({
         "ai_prediction": {"severity": pred_sev, "vehicle_type": pred_veh},
         "safety_adjusted": {"severity": adj_sev, "is_overridden": overwritten},
