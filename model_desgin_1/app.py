@@ -38,7 +38,7 @@ if not model_data:
     st.stop()
 m_sev, m_veh, l_sev, l_veh, f_cols, metrics_s, metrics_v = model_data
 
-tab1, tab2, tab3 = st.tabs(["📊 الإحصائيات", "🧠 تنبؤات النظام", "📈 أداء النموذج"])
+tab1, tab2, tab3, tab4 = st.tabs(["📊 الإحصائيات", "🗺️ بؤر الحوادث", "🧠 تنبؤات النظام", "📈 أداء النموذج"])
 
 with tab1:
     if stats:
@@ -57,6 +57,17 @@ with tab1:
         st.info("💡 يتم توليد الإحصائيات بعد إتمام التدريب.")
 
 with tab2:
+    st.subheader("توزيع الحوادث جغرافياً")
+    if stats and 'map_data' in stats:
+        map_df = pd.DataFrame(stats['map_data'])
+        color_map = {'بسيط': 'green', 'خطير': 'orange', 'قاتل': 'red'}
+        map_df['color'] = map_df['Accident_Severity'].map(color_map)
+        st.write(f"📍 عرض عينة من {len(map_df)} موقع بؤرة حوادث")
+        st.map(map_df, latitude='Latitude', longitude='Longitude', color='color', size=20)
+    else:
+        st.info("الجزء التفاعلي للخريطة يحتاج لقاعدة البيانات الكاملة.")
+
+with tab3:
     st.subheader("التنبيهات التنبؤية والتوصيات الذكية")
     col1, col2, col3 = st.columns(3)
     with col1:
@@ -100,7 +111,7 @@ with tab2:
         elif level == "success": st.success(text)
         else: st.info(text)
 
-with tab3:
+with tab4:
     st.subheader("أداء النموذج")
     c1, c2 = st.columns(2)
     with c1:

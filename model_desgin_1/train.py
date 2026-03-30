@@ -77,6 +77,7 @@ def run_training():
         "peak_hours": [{"hour": int(h), "count": int(c)} for h, c in get_peak_times(df_subset).items()],
         "top_cities": [{"city": city, "accidents": int(count)} for city, count in get_dangerous_locations(df_subset).items()],
         "lighting_impact": float(cross_analysis_lighting(df_subset)),
+        "map_data": df_subset[['Latitude', 'Longitude', 'Accident_Severity']].sample(min(1000, len(df_subset))).to_dict(orient='records'),
         "total_rows": len(df_subset)
     }
     

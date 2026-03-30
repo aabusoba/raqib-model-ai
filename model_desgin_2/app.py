@@ -59,7 +59,16 @@ with tab1:
 
 with tab2:
     st.subheader("توزيع الحوادث جغرافياً")
-    st.info("الجزء التفاعلي للخريطة يحتاج لقاعدة البيانات الكاملة. يمكنك الوصول إليه محلياً فقط.")
+    if stats and 'map_data' in stats:
+        map_df = pd.DataFrame(stats['map_data'])
+        # Map severity to colors
+        color_map = {'بسيط': 'green', 'خطير': 'orange', 'قاتل': 'red'}
+        map_df['color'] = map_df['Accident_Severity'].map(color_map)
+        
+        st.write(f"📍 عرض عينة من {len(map_df)} موقع بؤرة حوادث مكتشفة")
+        st.map(map_df, latitude='Latitude', longitude='Longitude', color='color', size=20)
+    else:
+        st.info("الجزء التفاعلي للخريطة يحتاج لقاعدة البيانات الكاملة. يمكنك الوصول إليه محلياً فقط.")
 
 with tab3:
     st.subheader("نظام التنبؤ بالخطر وتوصيات الأمان")

@@ -124,6 +124,7 @@ def train_models():
         "severity_distribution": get_severity_report(df).to_dict(),
         "peak_hours": [{"hour": int(h), "count": int(c)} for h, c in get_peak_times(df).items()],
         "top_cities": [{"city": city, "accidents": int(count)} for city, count in get_dangerous_locations(df).items()],
+        "map_data": df[['Latitude', 'Longitude', 'Accident_Severity']].sample(min(1000, len(df))).to_dict(orient='records'),
         "total_rows": len(df)
     }
     
