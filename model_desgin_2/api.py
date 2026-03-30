@@ -68,20 +68,60 @@ def get_dashboard_stats():
         "top_cities": [{"city": city, "accidents": int(count)} for city, count in top_cities.items()]
     }
 
-@app.route('/stats', methods=['GET'])
-def get_stats():
-    """Get dashboard stats (Model 2)"""
+@app.route('/statistics', methods=['GET'])
+def get_statistics():
+    """Get analytical statistics data (Model 2)"""
     return jsonify(sanitize_json(get_dashboard_stats()))
 
-@app.route('/predict', methods=['POST'])
-def predict():
-    """Predict risk using XGBoost (Model 2)"""
+@app.route('/hotspots', methods=['GET'])
+def get_hotspots():
+    """Get accident hotspots data (Model 2)"""
+    df = load_and_preprocess()
+    dangerous = get_dangerous_locations(df)
+    return jsonify(sanitize_json({
+        "dangerous_locations": {city: int(count) for city, count in dangerous.items()},
+        "total_accidents": int(sum(dangerous.values()))
+    }))
+
+@app.route('/predictions', methods=['POST'])
+def get_predictions():
+    """Get AI predictions and safety recommendations (Model 2)"""
     req_data = request.get_json()
     model_data = load_models()
     if not model_data: return jsonify({"error": "Models not found"}), 500
     m_s, m_v, l_s, l_v, f_cols, met_s, met_v = model_data
     input_data = {'Hour': int(req_data.get('hour', 12)), 'Day_of_Week': req_data.get('day', 'الأحد')}
-    return jsonify({"prediction_index": int(predict_risk(m_s, l_s, input_data, f_cols))})
+    pred_sev = predict_risk(m_s, l_s, input_data, f_cols)
+    pred_veh = predict_risk(m_v, l_v, input_data, f_cols)
+    adj_sev, overwritten = get_safety_adjusted_risk(pred_sev, input_data)
+    
+    stats = get_dashboard_stats()
+    analysis_res = {'increase_pct': stats.get('lighting_impact_pct', 0), 'top_dangerous': stats.get('top_cities', [{'city': 'N/A'}])[0]['city']}
+    preds_res = {'risk': pred_sev, 'time': f"{input_data['Hour']}:00"}
+    recs = get_recommendations(analysis_res, preds_res, input_data)
+    
+    return jsonify(sanitize_json({
+        "ai_prediction": {"severity": pred_sev, "vehicle_type": pred_veh},
+        "safety_adjusted": {"severity": adj_sev, "is_overridden": overwritten},
+        "recommendations": [{"text": r[0], "level": r[1]} for r in recs]
+    }))
+
+@app.route('/performance', methods=['GET'])
+def get_performance():
+    """Get model performance metrics (Model 2)"""
+    model_data = load_models()
+    if not model_data: return jsonify({"error": "Models not found"}), 500
+    m_s, m_v, l_s, l_v, f_s, met_s, met_v = model_data
+    return jsonify(sanitize_json({
+        "severity_model": {
+            "test_accuracy": met_s.get('test_acc', 0),
+            "report": met_s.get('report', {})
+        },
+        "vehicle_model": {
+            "test_accuracy": met_v.get('test_acc', 0),
+            "report": met_v.get('report', {})
+        }
+    }))
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5001, debug=True)

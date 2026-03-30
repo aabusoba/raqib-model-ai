@@ -68,14 +68,25 @@ def get_dashboard_stats():
         "lighting_impact_pct": cross_analysis_lighting(df)
     }
 
-@app.route('/stats', methods=['GET'])
-def get_stats():
-    """Get dashboard stats (Model 1)"""
+@app.route('/statistics', methods=['GET'])
+def get_statistics():
+    """Get dashboard statistics data (Model 1)"""
     return jsonify(sanitize_json(get_dashboard_stats()))
 
-@app.route('/predict', methods=['POST'])
-def predict():
-    """Predict risk and vehicle type (Model 1)"""
+@app.route('/hotspots', methods=['GET'])
+def get_hotspots():
+    """Get accident hotspots data (Model 1)"""
+    df = load_and_preprocess()
+    dangerous = get_dangerous_locations(df)
+    # Assuming map data is available, but for now return dangerous locations
+    return jsonify(sanitize_json({
+        "dangerous_locations": {city: int(count) for city, count in dangerous.items()},
+        "total_accidents": int(sum(dangerous.values()))
+    }))
+
+@app.route('/predictions', methods=['POST'])
+def get_predictions():
+    """Get AI predictions and recommendations (Model 1)"""
     req_data = request.get_json()
     model_data = load_models()
     if not model_data: return jsonify({"error": "Models not found"}), 500
@@ -95,7 +106,7 @@ def predict():
     adj_sev, overwritten = get_safety_adjusted_risk(pred_sev, input_data)
     
     stats = get_dashboard_stats()
-    analysis_res = {'increase_pct': stats.get('lighting_impact', 0), 'top_dangerous': stats.get('top_cities', [{'city': 'N/A'}])[0]['city']}
+    analysis_res = {'increase_pct': stats.get('lighting_impact_pct', 0), 'top_dangerous': stats.get('top_cities', [{'city': 'N/A'}])[0]['city']}
     preds_res = {'risk': pred_sev, 'time': f"{input_data['Hour']}:00"}
     recs = get_recommendations(analysis_res, preds_res, input_data)
     
@@ -103,6 +114,23 @@ def predict():
         "ai_prediction": {"severity": pred_sev, "vehicle_type": pred_veh},
         "safety_adjusted": {"severity": adj_sev, "is_overridden": overwritten},
         "recommendations": [{"text": r[0], "level": r[1]} for r in recs]
+    }))
+
+@app.route('/performance', methods=['GET'])
+def get_performance():
+    """Get model performance metrics (Model 1)"""
+    model_data = load_models()
+    if not model_data: return jsonify({"error": "Models not found"}), 500
+    m_s, m_v, l_s, l_v, f_s, met_s, met_v = model_data
+    return jsonify(sanitize_json({
+        "severity_model": {
+            "test_accuracy": met_s.get('test_acc', 0),
+            "report": met_s.get('report', {})
+        },
+        "vehicle_model": {
+            "test_accuracy": met_v.get('test_acc', 0),
+            "report": met_v.get('report', {})
+        }
     }))
 
 if __name__ == '__main__':
