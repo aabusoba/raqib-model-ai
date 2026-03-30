@@ -20,7 +20,7 @@ import os
 from data_processor import load_and_preprocess
 
 # Configuration settings: Define rows to load (None uses the entire dataset)
-DATA_ROWS = None
+DATA_ROWS = 3000000
 # Configuration settings: Define the ratio of the test set size
 TEST_SIZE = 0.2
 # Configuration settings: Set a fixed random state for reproducibility

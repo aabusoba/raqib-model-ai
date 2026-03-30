@@ -1,0 +1,148 @@
+{
+    "severity_distribution": {
+        "بسيط": 1765546,
+        "خطير": 265405,
+        "قاتل": 27332
+    },
+    "peak_hours": [
+        {
+            "hour": 0,
+            "count": 25229
+        },
+        {
+            "hour": 1,
+            "count": 18044
+        },
+        {
+            "hour": 2,
+            "count": 13698
+        },
+        {
+            "hour": 3,
+            "count": 11616
+        },
+        {
+            "hour": 4,
+            "count": 9592
+        },
+        {
+            "hour": 5,
+            "count": 15497
+        },
+        {
+            "hour": 6,
+            "count": 37445
+        },
+        {
+            "hour": 7,
+            "count": 92196
+        },
+        {
+            "hour": 8,
+            "count": 153708
+        },
+        {
+            "hour": 9,
+            "count": 106510
+        },
+        {
+            "hour": 10,
+            "count": 98111
+        },
+        {
+            "hour": 11,
+            "count": 113313
+        },
+        {
+            "hour": 12,
+            "count": 127683
+        },
+        {
+            "hour": 13,
+            "count": 130585
+        },
+        {
+            "hour": 14,
+            "count": 131357
+        },
+        {
+            "hour": 15,
+            "count": 157832
+        },
+        {
+            "hour": 16,
+            "count": 171969
+        },
+        {
+            "hour": 17,
+            "count": 188889
+        },
+        {
+            "hour": 18,
+            "count": 141970
+        },
+        {
+            "hour": 19,
+            "count": 101676
+        },
+        {
+            "hour": 20,
+            "count": 71899
+        },
+        {
+            "hour": 21,
+            "count": 55807
+        },
+        {
+            "hour": 22,
+            "count": 47764
+        },
+        {
+            "hour": 23,
+            "count": 35893
+        }
+    ],
+    "top_cities": [
+        {
+            "city": "الأصابعة",
+            "accidents": 53275
+        },
+        {
+            "city": "مدينة جرمة",
+            "accidents": 53134
+        },
+        {
+            "city": "الزهراء",
+            "accidents": 53080
+        },
+        {
+            "city": "رقدالين",
+            "accidents": 53016
+        },
+        {
+            "city": "العزيزية",
+            "accidents": 52998
+        },
+        {
+            "city": "بني وليد",
+            "accidents": 52996
+        },
+        {
+            "city": "غات",
+            "accidents": 52993
+        },
+        {
+            "city": "العجيلات",
+            "accidents": 52984
+        },
+        {
+            "city": "مصراتة",
+            "accidents": 52983
+        },
+        {
+            "city": "نالوت",
+            "accidents": 52926
+        }
+    ],
+    "total_rows": 2058283
+}
