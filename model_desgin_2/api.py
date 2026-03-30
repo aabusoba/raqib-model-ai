@@ -12,7 +12,15 @@ from recommender import get_recommendations, get_safety_adjusted_risk
 
 app = Flask(__name__)
 CORS(app)
+# Swagger metadata for proxy awareness
+
+app.config['SWAGGER'] = {
+    'title': 'Raqib Model 2 API',
+    'uiversion': 3,
+    'basePath': '/mod2/api'
+}
 swagger = Swagger(app)
+
 
 def load_models():
     current_dir = os.path.dirname(os.path.abspath(__file__))

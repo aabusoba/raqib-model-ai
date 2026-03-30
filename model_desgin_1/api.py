@@ -12,7 +12,14 @@ from recommender import get_recommendations, get_safety_adjusted_risk
 
 app = Flask(__name__)
 CORS(app)
+# Configure Swagger UI to look for assets relative to the base path
+app.config['SWAGGER'] = {
+    'title': 'Raqib Model 1 API',
+    'uiversion': 3,
+    'basePath': '/mod1/api'
+}
 swagger = Swagger(app)
+
 
 def load_models():
     current_dir = os.path.dirname(os.path.abspath(__file__))
