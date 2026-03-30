@@ -29,7 +29,8 @@ EXPOSE 8501
 EXPOSE 5000
 
 # Healthcheck for Streamlit
-HEALTHCHECK CMD curl --fail http://localhost:8501/_stcore/health
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+  CMD curl --fail http://localhost:8501/_stcore/health || exit 1
 
 # Default entrypoint (can be overridden in docker-compose)
 CMD ["streamlit", "run", "app.py", "--server.port=8501", "--server.address=0.0.0.0"]
