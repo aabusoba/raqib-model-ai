@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   # --- Model Design 1 ---
   model1-api:
