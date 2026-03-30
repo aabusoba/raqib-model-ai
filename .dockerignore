@@ -1,0 +1,29 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+.tox/
+.coverage
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.log
+.git/
+.gitignore
+.dockerignore
+.vscode/
+.idea/
+*.csv
+# We exclude CSVs here if we want to mount them, 
+# BUT the user wants it to run "without problems". 
+# If they don't have the files in the right place, it will fail.
+# So I will NOT exclude CSVs from the COPY unless I mount them.
+# BUT for model_desgin_2, the CSVs are nearly 1.5GB total. 
+# This might make the image build fail on some systems with low disk space.

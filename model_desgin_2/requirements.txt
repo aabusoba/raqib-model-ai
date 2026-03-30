@@ -1,0 +1,11 @@
+flask
+flask-cors
+flasgger
+pandas
+numpy
+scikit-learn
+xgboost
+imblearn
+plotly
+streamlit
+kagglehub[pandas-datasets]

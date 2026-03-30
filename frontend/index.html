@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>رقيب AI - لوحة التحكم المركزية</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #64748b;
+            --accent: #f59e0b;
+            --bg: #f8fafc;
+        }
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: var(--bg);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        header {
+            background: white;
+            width: 100%;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        h1 { color: var(--primary); margin: 0; font-size: 2.5rem; }
+        .container {
+            max-width: 1200px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            padding: 20px;
+            width: 90%;
+        }
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            border-top: 5px solid var(--primary);
+        }
+        .card:hover { transform: translateY(-10px); }
+        .card h2 { color: #1e293b; margin-top: 0; }
+        .card p { color: #64748b; flex-grow: 1; }
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        .btn {
+            flex: 1;
+            padding: 0.8rem;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: bold;
+            text-align: center;
+            transition: opacity 0.2s;
+        }
+        .btn-main { background: var(--primary); color: white; }
+        .btn-api { background: #10b981; color: white; }
+        .btn:hover { opacity: 0.85; }
+        .footer {
+            margin-top: auto;
+            padding: 2rem;
+            color: #94a3b8;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🚦 نظام رقيب لدعم القرار المروري (DSS)</h1>
+        <p>Libya Traffic Intelligence Hub</p>
+    </header>
+
+    <div class="container">
+        <!-- Model 1 Card -->
+        <div class="card">
+            <h2>التصميم الأول (Model Design 1)</h2>
+            <p>يستخدم خوارزميات التصنيف والتحليل الإحصائي التقليدي مع واجهة سهلة الاستخدام.</p>
+            <div class="btn-group">
+                <a href="/mod1/" class="btn btn-main">فتح لوحة التحكم</a>
+                <a href="/mod1/api/stats" class="btn btn-api">الوصول لـ API</a>
+            </div>
+            <div style="margin-top:10px; font-size: 0.8rem; color:#999;">Swagger: <a href="/mod1/api/apidocs/" target="_blank">Documentation</a></div>
+        </div>
+
+        <!-- Model 2 Card -->
+        <div class="card" style="border-top-color: #f59e0b;">
+            <h2>التصميم الثاني (Model Design 2)</h2>
+            <p>يستخدم خوارزميات XGBoost المتقدمة مع التعامل مع البيانات الضخمة (Big Data) ودمج بيانات المركبات.</p>
+            <div class="btn-group">
+                <a href="/mod2/" class="btn btn-main" style="background:#f59e0b;">فتح لوحة التحكم</a>
+                <a href="/mod2/api/stats" class="btn btn-api">الوصول لـ API</a>
+            </div>
+            <div style="margin-top:10px; font-size: 0.8rem; color:#999;">Swagger: <a href="/mod2/api/apidocs/" target="_blank">Documentation</a></div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        © 2026 Raqib AI - All Rights Reserved
+    </footer>
+</body>
+</html>

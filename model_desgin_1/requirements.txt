@@ -1,0 +1,10 @@
+pandas
+numpy
+scikit-learn
+streamlit
+folium
+plotly
+streamlit-folium
+flask
+flask-cors
+flasgger

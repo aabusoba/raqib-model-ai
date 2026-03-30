@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+  # --- Model Design 1 ---
+  model1-api:
+    build:
+      context: ./model_desgin_1
+      dockerfile: Dockerfile
+    container_name: model1-api
+    command: python api.py
+    restart: always
+    environment:
+      - PORT=5000
+    expose:
+      - "5000"
+
+  model1-dashboard:
+    build:
+      context: ./model_desgin_1
+      dockerfile: Dockerfile
+    container_name: model1-dashboard
+    command: streamlit run app.py --server.port=8501 --server.address=0.0.0.0 --server.baseUrlPath=mod1
+    restart: always
+    expose:
+      - "8501"
+
+  # --- Model Design 2 ---
+  model2-api:
+    build:
+      context: ./model_desgin_2
+      dockerfile: Dockerfile
+    container_name: model2-api
+    command: python api.py
+    restart: always
+    environment:
+      - PORT=5001
+    expose:
+      - "5001"
+
+  model2-dashboard:
+    build:
+      context: ./model_desgin_2
+      dockerfile: Dockerfile
+    container_name: model2-dashboard
+    command: streamlit run app.py --server.port=8502 --server.address=0.0.0.0 --server.baseUrlPath=mod2
+    restart: always
+    expose:
+      - "8502"
+
+  # --- Gateway & Landing Page ---
+  nginx:
+    image: nginx:latest
+    container_name: raqib-gateway
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./frontend:/usr/share/nginx/html:ro
+    ports:
+      - "80:80"
+    depends_on:
+      - model1-api
+      - model1-dashboard
+      - model2-api
+      - model2-dashboard
+    restart: always
+
+networks:
+  default:
+    name: raqib-network
