@@ -1,0 +1,149 @@
+{
+    "severity_distribution": {
+        "بسيط": 85.38003948118019,
+        "خطير": 13.328541713589209,
+        "قاتل": 1.291418805230594
+    },
+    "peak_hours": [
+        {
+            "hour": 17,
+            "count": 26391
+        },
+        {
+            "hour": 16,
+            "count": 24404
+        },
+        {
+            "hour": 15,
+            "count": 23645
+        },
+        {
+            "hour": 8,
+            "count": 22164
+        },
+        {
+            "hour": 18,
+            "count": 20652
+        },
+        {
+            "hour": 14,
+            "count": 18684
+        },
+        {
+            "hour": 13,
+            "count": 18592
+        },
+        {
+            "hour": 12,
+            "count": 18006
+        },
+        {
+            "hour": 11,
+            "count": 15831
+        },
+        {
+            "hour": 19,
+            "count": 15527
+        },
+        {
+            "hour": 9,
+            "count": 15264
+        },
+        {
+            "hour": 10,
+            "count": 13532
+        },
+        {
+            "hour": 7,
+            "count": 12377
+        },
+        {
+            "hour": 20,
+            "count": 11179
+        },
+        {
+            "hour": 21,
+            "count": 9268
+        },
+        {
+            "hour": 22,
+            "count": 7994
+        },
+        {
+            "hour": 23,
+            "count": 6275
+        },
+        {
+            "hour": 6,
+            "count": 5177
+        },
+        {
+            "hour": 0,
+            "count": 4569
+        },
+        {
+            "hour": 1,
+            "count": 3444
+        },
+        {
+            "hour": 2,
+            "count": 2577
+        },
+        {
+            "hour": 5,
+            "count": 2440
+        },
+        {
+            "hour": 3,
+            "count": 2251
+        },
+        {
+            "hour": 4,
+            "count": 1673
+        }
+    ],
+    "top_cities": [
+        {
+            "city": "الخمس",
+            "accidents": 11803
+        },
+        {
+            "city": "غات",
+            "accidents": 9907
+        },
+        {
+            "city": "الأصابعة",
+            "accidents": 9513
+        },
+        {
+            "city": "ودان",
+            "accidents": 9083
+        },
+        {
+            "city": "ترهونة",
+            "accidents": 8852
+        },
+        {
+            "city": "الزهراء",
+            "accidents": 8736
+        },
+        {
+            "city": "رقدالين",
+            "accidents": 8713
+        },
+        {
+            "city": "طبرق",
+            "accidents": 8676
+        },
+        {
+            "city": "إجدابيا",
+            "accidents": 8487
+        },
+        {
+            "city": "زوارة",
+            "accidents": 8468
+        }
+    ],
+    "lighting_impact": -93.47202533154918,
+    "total_rows": 301916
+}
