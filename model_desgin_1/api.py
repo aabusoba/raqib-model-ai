@@ -68,12 +68,12 @@ def get_dashboard_stats():
         "lighting_impact_pct": cross_analysis_lighting(df)
     }
 
-@app.route('/api/stats', methods=['GET'])
+@app.route('/stats', methods=['GET'])
 def get_stats():
     """Get dashboard stats (Model 1)"""
     return jsonify(sanitize_json(get_dashboard_stats()))
 
-@app.route('/api/predict', methods=['POST'])
+@app.route('/predict', methods=['POST'])
 def predict():
     """Predict risk and vehicle type (Model 1)"""
     req_data = request.get_json()

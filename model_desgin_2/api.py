@@ -68,12 +68,12 @@ def get_dashboard_stats():
         "top_cities": [{"city": city, "accidents": int(count)} for city, count in top_cities.items()]
     }
 
-@app.route('/api/stats', methods=['GET'])
+@app.route('/stats', methods=['GET'])
 def get_stats():
     """Get dashboard stats (Model 2)"""
     return jsonify(sanitize_json(get_dashboard_stats()))
 
-@app.route('/api/predict', methods=['POST'])
+@app.route('/predict', methods=['POST'])
 def predict():
     """Predict risk using XGBoost (Model 2)"""
     req_data = request.get_json()
