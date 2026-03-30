@@ -59,13 +59,22 @@ def get_dashboard_stats():
     current_dir = os.path.dirname(os.path.abspath(__file__))
     stats_path = os.path.join(current_dir, 'v2_stats.json')
     if os.path.exists(stats_path):
-        with open(stats_path, 'r', encoding='utf-8') as f: return json.load(f)
+        with open(stats_path, 'r', encoding='utf-8') as f:
+            stats = json.load(f)
+        if 'map_data' not in stats:
+            df = load_and_preprocess()
+            stats['map_data'] = df[['Latitude', 'Longitude', 'Accident_Severity']].dropna().sample(min(1000, len(df))).to_dict('records')
+        return stats
     df = load_and_preprocess()
+    # Sample map data for visualization (limit to 1000 points for performance)
+    map_sample = df[['Latitude', 'Longitude', 'Accident_Severity']].dropna().sample(min(1000, len(df))).to_dict('records')
     top_cities = get_dangerous_locations(df).to_dict()
     return {
         "severity_distribution": get_severity_report(df).to_dict(),
         "peak_hours": [{"hour": int(h), "count": int(c)} for h, c in get_peak_times(df).items()],
-        "top_cities": [{"city": city, "accidents": int(count)} for city, count in top_cities.items()]
+        "top_cities": [{"city": city, "accidents": int(count)} for city, count in top_cities.items()],
+        "lighting_impact_pct": cross_analysis_lighting(df),
+        "map_data": map_sample
     }
 
 @app.route('/statistics', methods=['GET'])
