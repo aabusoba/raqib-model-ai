@@ -116,6 +116,22 @@ def train_models():
     # Calculate and store model accuracy and classification report
     results['vehicle'] = (m_veh, le_veh, accuracy_score(y_test_v, m_veh.predict(X_test_v)), classification_report(y_test_v, m_veh.predict(X_test_v), target_names=le_veh.classes_, output_dict=True))
     
+    # --- New: Save Dashboard Stats to JSON for lightweight deployment ---
+    print("📊 Generating dashboard statistics summary...")
+    from analyzer import get_dangerous_locations, get_peak_times, get_severity_report
+    
+    stats = {
+        "severity_distribution": get_severity_report(df).to_dict(),
+        "peak_hours": [{"hour": int(h), "count": int(c)} for h, c in get_peak_times(df).items()],
+        "top_cities": [{"city": city, "accidents": int(count)} for city, count in get_dangerous_locations(df).items()],
+        "total_rows": len(df)
+    }
+    
+    import json
+    with open('model_desgin_2/v2_stats.json', 'w', encoding='utf-8') as f:
+        json.dump(stats, f, ensure_ascii=False, indent=4)
+    # --- End Stats ---
+
     # Save both models to binary files
     with open('model_desgin_2/model_severity_v2.pkl', 'wb') as f:
         # Save the severity model, its encoders, features, and metrics
@@ -125,8 +141,8 @@ def train_models():
         # Save the vehicle classification model and its corresponding metadata
         pickle.dump((m_veh, encoders, features, {'test_acc': results['vehicle'][2], 'report': results['vehicle'][3]}), f)
     
-    # Print final success confirmation
-    print("✅ Both models trained and saved successfully!")
+    print("✅ Models and Stats saved successfully! You can now run the API without the dataset.")
+
 
 # Ensure the script is run directly and not imported
 if __name__ == "__main__":

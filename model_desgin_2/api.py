@@ -14,15 +14,6 @@ app = Flask(__name__)
 CORS(app)
 swagger = Swagger(app)
 
-# Global Data & Model Cache
-data_cache = None
-
-def get_cached_data():
-    global data_cache
-    if data_cache is None:
-        data_cache = load_and_preprocess()
-    return data_cache
-
 def load_models():
     current_dir = os.path.dirname(os.path.abspath(__file__))
     m_sev_path = os.path.join(current_dir, 'model_severity_v2.pkl')
@@ -39,6 +30,26 @@ def load_models():
 def sanitize_json(data):
     return json.loads(json.dumps(data).replace('NaN', '0').replace('Infinity', '0'))
 
+def get_dashboard_stats():
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    stats_path = os.path.join(current_dir, 'v2_stats.json')
+    if os.path.exists(stats_path):
+        with open(stats_path, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    
+    # Fallback to dataset if stats not found (e.g. fresh training environment)
+    df = load_and_preprocess()
+    sev_rep = get_severity_report(df).to_dict()
+    peak_t = get_peak_times(df).sort_index()
+    hours_list = [{"hour": int(h), "count": int(c)} for h, c in peak_t.items()]
+    top_cities = get_dangerous_locations(df).to_dict()
+    cities_list = [{"city": city, "accidents": int(count)} for city, count in top_cities.items()]
+    return {
+        "severity_distribution": sev_rep,
+        "peak_hours": hours_list,
+        "top_cities": cities_list
+    }
+
 @app.route('/api/stats', methods=['GET'])
 def get_stats():
     """
@@ -48,18 +59,8 @@ def get_stats():
       200:
         description: Accident statistics including severity, peak hours and top cities
     """
-    df = get_cached_data()
-    sev_rep = get_severity_report(df).to_dict()
-    peak_t = get_peak_times(df).sort_index()
-    hours_list = [{"hour": int(h), "count": int(c)} for h, c in peak_t.items()]
-    top_cities = get_dangerous_locations(df).to_dict()
-    cities_list = [{"city": city, "accidents": int(count)} for city, count in top_cities.items()]
-    
-    return jsonify(sanitize_json({
-        "severity_distribution": sev_rep,
-        "peak_hours": hours_list,
-        "top_cities": cities_list
-    }))
+    stats = get_dashboard_stats()
+    return jsonify(sanitize_json(stats))
 
 @app.route('/api/predict', methods=['POST'])
 def predict():
@@ -86,7 +87,7 @@ def predict():
     m_s, m_v, l_s, l_v, f_cols, met_s, met_v = model_data
     input_data = {'Hour': int(req_data.get('hour', 12)), 'Day_of_Week': req_data.get('day', 'الأحد')}
     
-    # Simplified return for demo
+    # Predict directly using XGBoost and encoders (doesn't need raw CSV)
     return jsonify({"prediction_index": int(predict_risk(m_s, l_s, input_data, f_cols))})
 
 if __name__ == '__main__':
