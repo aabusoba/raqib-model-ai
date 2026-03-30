@@ -13,6 +13,7 @@ services:
       - PORT=5000
     networks:
       - raqib-network
+      - dokploy-network
 
   model1-dashboard:
     build:
@@ -23,6 +24,7 @@ services:
     restart: always
     networks:
       - raqib-network
+      - dokploy-network
 
   # --- Model Design 2 ---
   model2-api:
@@ -36,6 +38,7 @@ services:
       - PORT=5001
     networks:
       - raqib-network
+      - dokploy-network
 
   model2-dashboard:
     build:
@@ -46,6 +49,7 @@ services:
     restart: always
     networks:
       - raqib-network
+      - dokploy-network
 
 
 
